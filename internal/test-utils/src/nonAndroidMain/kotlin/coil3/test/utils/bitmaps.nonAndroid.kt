@@ -14,7 +14,7 @@ actual val Bitmap.height: Int get() = height
 /**
  * Returns a [ByteArray] of pixel values.
  */
-fun Bitmap.getPixels(): ByteArray = readPixels() ?: byteArrayOf()
+expect fun Bitmap.getPixels(): ByteArray
 
 actual suspend fun Bitmap.computeSimilarity(
     other: Bitmap,

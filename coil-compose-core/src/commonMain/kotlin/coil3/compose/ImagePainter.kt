@@ -2,7 +2,6 @@ package coil3.compose
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope.Companion.DefaultFilterQuality
@@ -30,7 +29,7 @@ class ImagePainter(
             scaleY = image.height.let { if (it > 0) size.height / it else 1f },
             pivot = Offset.Zero,
         ) {
-            image.draw(drawContext.canvas.nativeCanvas)
+            drawImage(image)
         }
     }
 }
@@ -41,4 +40,4 @@ expect fun Image.asPainter(
     filterQuality: FilterQuality = DefaultFilterQuality,
 ): Painter
 
-internal expect val Canvas.nativeCanvas: coil3.Canvas
+internal expect fun DrawScope.drawImage(image: Image)

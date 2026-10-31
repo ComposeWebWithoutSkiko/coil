@@ -12,6 +12,14 @@ implementation("io.coil-kt.coil3:coil-network-ktor3:3.6.3")
 
 If you use OkHttp, that's it. Once imported, network URLs like `https://example.com/image.jpg` will automatically be supported. If you use Ktor, you need to add supported engines for each platform (see below).
 
+## Web
+
+On the web, `coil-network-core` alone supports network URLs, and every artifact above brings it. `fetch` downloads the image and the browser decodes it, so the image doesn't pass through Kotlin:
+
+- The disk cache is the HTTP cache of the browser. Reading from the disk cache with `networkCachePolicy(CachePolicy.DISABLED)` becomes the `force-cache` mode of `fetch`, which goes to the network for an image that isn't cached.
+- `Decoder`s and the decode events of `EventListener` don't run for these images. For them, or for an `HttpClient` of your own, add `KtorNetworkFetcherFactory` to the components of your `ImageLoader`: its responses go through Kotlin as on other platforms.
+- SVGs are drawn by the browser and need no `coil-svg`. Their size is the one of the SVG itself, not of its `viewBox`.
+
 ## Ktor network engines
 
 If you depend on `coil-network-ktor2` or `coil-network-ktor3` you need to import a [Ktor engine](https://ktor.io/docs/client-engines.html) for each platform (except Javascript). Here's a quickstart set of engines:

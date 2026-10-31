@@ -9,7 +9,7 @@ plugins {
     id("androidx.baselineprofile.consumer")
 }
 
-addAllMultiplatformTargets(libs.versions.skiko)
+addAllMultiplatformTargets()
 multiplatformAndroidLibrary(name = "coil3.core") {
     androidResources {
         enable = true
@@ -35,14 +35,14 @@ kotlin {
                 implementation(libs.bundles.test.common)
             }
         }
-        named("nonAndroidMain") {
+        named("skiaMain") {
             dependencies {
                 api(libs.skiko)
             }
         }
         named("jsCommonMain") {
             dependencies {
-                implementation(libs.kotlinx.browser)
+                api(libs.kotlinx.browser)
             }
         }
         androidMain {

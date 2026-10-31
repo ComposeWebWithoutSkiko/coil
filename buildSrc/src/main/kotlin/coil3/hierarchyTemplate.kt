@@ -30,8 +30,15 @@ private val hierarchyTemplate = KotlinHierarchyTemplate {
 
 private fun KotlinHierarchyBuilder.groupNonAndroid() {
     group("nonAndroid") {
-        withJvm()
+        groupSkia()
         groupJsCommon()
+    }
+}
+
+/** The targets that draw with Skia. The web ones draw with the browser. */
+private fun KotlinHierarchyBuilder.groupSkia() {
+    group("skia") {
+        withJvm()
         groupNative()
     }
 }

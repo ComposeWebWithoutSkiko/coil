@@ -4,6 +4,7 @@ import coil3.disk.DiskCache
 import coil3.network.NetworkHeaders
 import coil3.network.NetworkResponse
 import coil3.network.NetworkResponseBody
+import coil3.util.MimeTypeMap
 import okio.Buffer
 
 internal fun NetworkHeaders.Builder.append(line: String) = apply {
@@ -39,6 +40,19 @@ internal operator fun NetworkHeaders.plus(other: NetworkHeaders): NetworkHeaders
         builder[key] = values
     }
     return builder.build()
+}
+
+/**
+ * Parse the response's `content-type` header.
+ *
+ * "text/plain" is often used as a default/fallback MIME type.
+ * Attempt to guess a better MIME type from the file extension.
+ */
+internal fun mimeTypeOf(url: String, contentType: String?): String? {
+    if (contentType == null || contentType.startsWith(MIME_TYPE_TEXT_PLAIN)) {
+        MimeTypeMap.getMimeTypeFromUrl(url)?.let { return it }
+    }
+    return contentType?.substringBefore(';')
 }
 
 internal fun NetworkResponse.requireBody(): NetworkResponseBody {

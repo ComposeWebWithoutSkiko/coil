@@ -1,6 +1,5 @@
 package coil3
 
-import coil3.decode.SkiaImageDecoder
 import coil3.request.Disposable
 import coil3.request.ImageRequest
 import coil3.request.ImageResult
@@ -23,11 +22,3 @@ internal actual inline fun transition(
     eventListener: EventListener,
     setImage: () -> Unit,
 ) = setImage()
-
-internal actual fun ComponentRegistry.Builder.addAndroidComponents(
-    options: RealImageLoader.Options,
-): ComponentRegistry.Builder {
-    return this
-        // Decoders
-        .add(SkiaImageDecoder.Factory())
-}

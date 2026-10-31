@@ -13,15 +13,14 @@ import coil3.fetch.SourceFetchResult
 import coil3.network.internal.CACHE_CONTROL
 import coil3.network.internal.CONTENT_TYPE
 import coil3.network.internal.HTTP_RESPONSE_NOT_MODIFIED
-import coil3.network.internal.MIME_TYPE_TEXT_PLAIN
 import coil3.network.internal.abortQuietly
 import coil3.network.internal.assertNotOnMainThread
 import coil3.network.internal.closeQuietly
+import coil3.network.internal.mimeTypeOf
 import coil3.network.internal.readBuffer
 import coil3.network.internal.requireBody
 import coil3.network.internal.singleParameterLazy
 import coil3.request.Options
-import coil3.util.MimeTypeMap
 import okio.Buffer
 import okio.FileSystem
 import okio.IOException
@@ -234,19 +233,9 @@ class NetworkFetcher(
         )
     }
 
-    /**
-     * Parse the response's `content-type` header.
-     *
-     * "text/plain" is often used as a default/fallback MIME type.
-     * Attempt to guess a better MIME type from the file extension.
-     */
+    /** @see mimeTypeOf */
     @InternalCoilApi
-    fun getMimeType(url: String, contentType: String?): String? {
-        if (contentType == null || contentType.startsWith(MIME_TYPE_TEXT_PLAIN)) {
-            MimeTypeMap.getMimeTypeFromUrl(url)?.let { return it }
-        }
-        return contentType?.substringBefore(';')
-    }
+    fun getMimeType(url: String, contentType: String?): String? = mimeTypeOf(url, contentType)
 
     private fun DiskCache.Snapshot.toNetworkResponseOrNull(): NetworkResponse? {
         try {

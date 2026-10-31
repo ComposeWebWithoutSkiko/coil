@@ -1,8 +1,8 @@
 package coil3.compose
 
-import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
@@ -31,4 +31,6 @@ actual fun Image.asPainter(
     else -> ImagePainter(this)
 }
 
-internal actual val Canvas.nativeCanvas get() = nativeCanvas
+internal actual fun DrawScope.drawImage(image: Image) {
+    image.draw(drawContext.canvas.nativeCanvas)
+}

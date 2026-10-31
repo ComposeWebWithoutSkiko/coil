@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.dsl.abi.BinariesSource
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
-import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
@@ -56,6 +55,12 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // The Compose that draws with the browser isn't published to a repository yet.
+        mavenLocal {
+            content {
+                includeVersionByRegex("org\\.jetbrains\\.compose.*", ".*", ".*-webcanvas")
+            }
+        }
     }
 
     // Necessary to publish to Maven.
@@ -139,15 +144,6 @@ allprojects {
     if (project.name in publicModules) {
         configureAbiValidation()
         configureAndroidAbiValidation()
-    }
-
-    // Skiko's runtime files are ESM-only so preload our shim to let Node require them during tests.
-    tasks.withType<KotlinJsTest>().configureEach {
-        nodeJsArgs.add("--require")
-        val skikoMjsWorkaround = rootProject.layout.projectDirectory
-            .file("gradle/nodejs/registerSkikoMjsWorkaround.cjs")
-            .asFile
-        nodeJsArgs.add(skikoMjsWorkaround.absolutePath)
     }
 }
 

@@ -1,5 +1,3 @@
-import coil3.createSkikoWasmJsRuntimeDependency
-
 plugins {
     id("kotlin-multiplatform")
 }
@@ -31,5 +29,3 @@ kotlin {
         }
     }
 }
-
-createSkikoWasmJsRuntimeDependency(libs.versions.skiko)
