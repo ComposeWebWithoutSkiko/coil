@@ -55,10 +55,10 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        // The Compose that draws with the browser isn't published to a repository yet.
-        mavenLocal {
-            content {
-                includeVersionByRegex("org\\.jetbrains\\.compose.*", ".*", ".*-webcanvas")
+        // The Compose that draws with the browser: a local build of it, or the published one.
+        listOf(mavenLocal(), maven("https://repo.redlance.org/public")).forEach { repository ->
+            repository.content {
+                includeVersionByRegex("org\\.jetbrains\\.compose.*", ".*", ".*-webcanvas.*")
             }
         }
     }

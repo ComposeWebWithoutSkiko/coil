@@ -10,6 +10,7 @@ import com.vanniktech.maven.publish.JavadocJar.Dokka
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.gradle.api.Project
+import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
@@ -163,8 +164,22 @@ fun Project.setupPublishing(
     extensions.configure<MavenPublishBaseExtension> {
         pomFromGradleProperties()
         publishToMavenCentral()
-        signAllPublications()
+        if (providers.gradleProperty("RELEASE_SIGNING_ENABLED").orNull.toBoolean()) {
+            signAllPublications()
+        }
         action()
+    }
+    extensions.configure<PublishingExtension> {
+        repositories {
+            maven {
+                name = "ComposeRepo"
+                setUrl(System.getenv("COMPOSE_REPO_URL"))
+                credentials {
+                    username = System.getenv("COMPOSE_REPO_USERNAME")
+                    password = System.getenv("COMPOSE_REPO_KEY")
+                }
+            }
+        }
     }
 }
 
