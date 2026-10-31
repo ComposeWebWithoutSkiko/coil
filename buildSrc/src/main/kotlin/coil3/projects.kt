@@ -164,7 +164,7 @@ fun Project.setupPublishing(
     extensions.configure<MavenPublishBaseExtension> {
         pomFromGradleProperties()
         publishToMavenCentral()
-        if (providers.gradleProperty("RELEASE_SIGNING_ENABLED").orNull.toBoolean()) {
+        if (releaseSigningEnabled) {
             signAllPublications()
         }
         action()
